@@ -1,8 +1,12 @@
 <?php
-$config['db']['host'] = '172.16.201.40';
+/*$config['db']['host'] = '172.16.201.40';
 $config['db']['user'] = 'webverificacion';
 $config['db']['password'] = 'webconsulta';
-$config['db']['database'] = 'corporativo';
+$config['db']['database'] = 'corporativo';*/
+$config['db']['host'] = '172.16.202.15';
+$config['db']['user'] = 'test';
+$config['db']['password'] = '123456';
+$config['db']['database'] = 'expediente';
 
 //$config['uploads']['uploads_dir'] = 'uploads';
 $config['uploads']['varname'] = 'uploads';
