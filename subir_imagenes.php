@@ -50,7 +50,7 @@
         Exit;
     }
 
-    if (!array_key_exists($_POST['clave_cuenta']) ||
+    if (!array_key_exists('clave_cuenta', $_POST) ||
         trim($_POST['clave_cuenta']) == '') {
         $_SESSION['msg']['type'] = 'warn';
         $_SESSION['msg']['data'] = 'Indique la clave de cuenta';
