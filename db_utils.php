@@ -13,7 +13,7 @@
         $result = mysql_query($query, $link);
         if (mysql_errno($link))
             echo mysql_errno($link).':'.mysql_error($link);
-        return result;
+        return $result;
     }
 
     function make_close($link) {
