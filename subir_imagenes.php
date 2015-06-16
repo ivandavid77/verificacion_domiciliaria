@@ -22,7 +22,7 @@
     }
 
     function guardar_imagenes($clave_cuenta, $uploads, $config) {
-        $link = link($config);
+        $link = make_link($config);
         $uploads = diverse_array($uploads);
         foreach ($uploads as $file) {
             if ($file['error'] != UPLOAD_ERR_OK ||

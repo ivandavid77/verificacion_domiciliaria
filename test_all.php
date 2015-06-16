@@ -9,7 +9,7 @@
     $config['db']['password'] = '123456';
     $config['db']['database'] = 'expediente';
 
-    $link = link($config);
+    $link = make_link($config);
     query(
         'INSERT INTO documentos_clientes SET '.
         'clave_cuenta = "T99999999"', $link);

@@ -1,5 +1,5 @@
 <?php
-    function link($config) {
+    function make_link($config) {
         $link = mysql_connect($config['db']['host'], $config['db']['user'],
                               $config['db']['password']);
         mysql_select_db($config['db']['database'], $link);
