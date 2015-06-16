@@ -45,7 +45,7 @@
     if (!array_key_exists($config['uploads']['varname'], $_FILES)) {
         $_SESSION['msg']['type'] = 'warn';
         $_SESSION['msg']['data'] = 'Debe subir imagenes';
-        header('Location: index.php');
+        //header('Location: index.php');
         Exit;
     }
 
