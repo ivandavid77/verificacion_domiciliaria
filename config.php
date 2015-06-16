@@ -2,14 +2,13 @@
 $config['db']['host'] = '172.16.201.40';
 $config['db']['user'] = 'webverificacion';
 $config['db']['password'] = 'webconsulta';
-//$config['db']['database'] = 'expediente';
 $config['db']['database'] = 'corporativo';
 
-$config['uploads']['uploads_dir'] = 'uploads';
+//$config['uploads']['uploads_dir'] = 'uploads';
 $config['uploads']['varname'] = 'uploads';
 
-$config['resize']['max_width'] = 1024;
-$config['resize']['max_height'] = 1024;
+$config['resize']['max_width'] = 200;
+$config['resize']['max_height'] = 150;
 
 $config['debug'] = true;
 
