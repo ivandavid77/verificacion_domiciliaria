@@ -1,5 +1,5 @@
 <?php
-    $config = require_once('config.php');
+    $config = require('config.php');
     require_once('inicio_sesion.php');
     require_once('image_utils.php');
     require_once('db_utils.php');
@@ -43,6 +43,7 @@
     echo '<br><br><br>';
     print_r($_FILES['uploads']);
     echo '<br><br><br>';
+    print_r($config);
     echo $config['uploads']['varname'];
     if (!array_key_exists($config['uploads']['varname'], $_FILES)) {
         $_SESSION['msg']['type'] = 'warn';

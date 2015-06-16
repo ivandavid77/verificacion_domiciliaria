@@ -1,5 +1,5 @@
 <?php
-    $config = require_once('config.php');
+    $config = require('config.php');
     require_once('db_utils.php');
     require_once('queries.php');
 
