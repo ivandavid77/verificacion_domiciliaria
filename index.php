@@ -1,5 +1,4 @@
 <?php
-    $config = require_once('config.php');
     include('inicio_sesion.php');
 ?>
 <!DOCTYPE html>
@@ -11,12 +10,12 @@
 <body>
 	<form action="subir_imagenes.php" method="post" enctype="multipart/form-data">
         <input name="clave_cuenta" type="text" placeholder="cuenta de cliente"><br>
-        <input name="uploads[]" type="file" value="Imágen 1"><br>
-        <input name="uploads[]" type="file" value="Imágen 2"><br>
-        <input name="uploads[]" type="file" value="Imágen 3"><br>
-        <input name="uploads[]" type="file" value="Imágen 4"><br>
-        <input name="uploads[]" type="file" value="Imágen 5"><br>
-        <input name="cargar_foto" type="submit" value="Cargar foto">
+        <input name="uploads[]" type="file"><br>
+        <input name="uploads[]" type="file"><br>
+        <input name="uploads[]" type="file"><br>
+        <input name="uploads[]" type="file"><br>
+        <input name="uploads[]" type="file"><br>
+        <input type="submit" value="Cargar fotos">
     </form>
 	<?php
 		if (isset($_SESSION['msg'])) {

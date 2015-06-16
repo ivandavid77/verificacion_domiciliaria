@@ -8,7 +8,6 @@ $config['db']['user'] = 'test';
 $config['db']['password'] = '123456';
 $config['db']['database'] = 'expediente';
 
-//$config['uploads']['uploads_dir'] = 'uploads';
 $config['uploads']['varname'] = 'uploads';
 
 $config['resize']['max_width'] = 200;

@@ -31,20 +31,25 @@
                 continue; // Solo archivos sin errores
             }
             //$name = md5_file($file['tmp_name']);
-            $data = base64_encode(resize_image($file['tmp_name'],
-                                       $config['resize']['max_width'],
-                                       $config['resize']['max_height']));
+            $data = base64_encode(resize_image(
+                                            $file['tmp_name'],
+                                            $config['resize']['max_width'],
+                                            $config['resize']['max_height']));
             make_query(insert_documentos_clientes($clave_cuenta, $data), $link);
         }
         make_close($link);
     }
 
     if (!isset($_FILES[$config['uploads']['varname']])) {
+        $_SESSION['msg']['type'] = 'warn';
+        $_SESSION['msg']['data'] = 'Debe subir imagenes';
         header('Location: index.php');
         Exit;
     }
 
     if (!isset($_POST['clave_cuenta'])) {
+        $_SESSION['msg']['type'] = 'warn';
+        $_SESSION['msg']['data'] = 'Indique la clave de cuenta';
         header('Location: index.php');
         Exit;
     }
