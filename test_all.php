@@ -10,14 +10,25 @@
     $config['db']['database'] = 'expediente';
 
     $link = make_link($config);
-    make_query(
+    $result = make_query(
+        'SELECT clave_cuenta '.
+        'FROM documentos_clientes '.
+        'WHERE clave_cuenta = "T99999999" '.
+        'LIMIT 1', $link);
+    while ($row = get_dict($result)) {
+        echo 'Encontrado previamente: '.$row['clave_cuenta'];
+    }
+
+    /*make_query(
         'INSERT INTO documentos_clientes SET '.
-        'clave_cuenta = "T99999999"', $link);
+        'clave_cuenta = "T99999999"', $link);*/
+
     make_close($link);
 
     // Redimensionado
     require_once('image_utils.php');
     $source = getcwd() + '/test_image_source.jpg';
     $target = getcwd() + '/test_image_target.jpg';
-
-    resize_image($filename, 200, 150, $target);
+    print_r($source);
+    print_r($target);
+    resize_image($source, 200, 150, $target);

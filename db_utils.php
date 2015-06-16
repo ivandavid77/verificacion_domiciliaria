@@ -19,3 +19,7 @@
     function make_close($link) {
         mysql_close($link);
     }
+
+    function get_dict($result) {
+        return mysql_fetch_assoc($result);
+    }
