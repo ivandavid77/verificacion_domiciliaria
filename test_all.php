@@ -27,6 +27,7 @@
 
     // Redimensionado
     require_once('image_utils.php');
+    echo 'getcwd(): '+getcwd();
     $source = getcwd() + '/test_image_source.jpg';
     $target = getcwd() + '/test_image_target.jpg';
     print_r($source);
