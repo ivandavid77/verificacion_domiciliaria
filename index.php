@@ -1,5 +1,5 @@
 <?php
-    include('inicio_sesion.php');
+    require('inicio_sesion.php');
 ?>
 <!DOCTYPE html>
 <html>
