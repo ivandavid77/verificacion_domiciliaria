@@ -49,7 +49,6 @@
         header('Location: index.php');
         Exit;
     }
-    Exit;
 
     if (!array_key_exists($_POST['clave_cuenta']) ||
         trim($_POST['clave_cuenta']) == '') {
