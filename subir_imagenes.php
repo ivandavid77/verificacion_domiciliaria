@@ -39,15 +39,16 @@
         }
         make_close($link);
     }
-    print_r($_FILES[$config['uploads']['varname']]);
-    if (!isset($_FILES[$config['uploads']['varname']])) {
+
+    if (!array_key_exists($config['uploads']['varname'], $_FILES)) {
         $_SESSION['msg']['type'] = 'warn';
         $_SESSION['msg']['data'] = 'Debe subir imagenes';
         header('Location: index.php');
         Exit;
     }
 
-    if (!isset($_POST['clave_cuenta'])) {
+    if (!array_key_exists($_POST['clave_cuenta']) ||
+        trim($_POST['clave_cuenta']) == '') {
         $_SESSION['msg']['type'] = 'warn';
         $_SESSION['msg']['data'] = 'Indique la clave de cuenta';
         header('Location: index.php');
