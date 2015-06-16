@@ -39,7 +39,9 @@
         }
         make_close($link);
     }
-
+    print_r($_FILES);
+    echo '<br><br><br>';
+    print_r($_FILES['uploads']);
     if (!array_key_exists($config['uploads']['varname'], $_FILES)) {
         $_SESSION['msg']['type'] = 'warn';
         $_SESSION['msg']['data'] = 'Debe subir imagenes';
