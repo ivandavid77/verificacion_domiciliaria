@@ -18,5 +18,11 @@
         <input name="uploads[]" type="file" value="Imágen 5"><br>
         <input name="cargar_foto" type="submit" value="Cargar foto">
     </form>
+	<?php
+		if (isset($_SESSION['msg'])) {
+			echo '<p class="'.$_SESSION['msg']['type'].'">'.$_SESSION['msg']['data'].'</p>';
+			unset($_SESSION['msg']);
+		}
+	?>
 </body>
 </html>

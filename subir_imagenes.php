@@ -52,5 +52,6 @@
     guardar_imagenes(sanitizar($_POST['clave_cuenta']),
                      $_FILES[$config['uploads']['varname']],
                      $config);
-
-    header('Location : index.php');
+    $_SESSION['msg']['type'] = 'info';
+    $_SESSION['msg']['data'] = 'Se han agregado las imagenes';
+    header('Location: index.php');
