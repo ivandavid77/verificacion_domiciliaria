@@ -9,13 +9,13 @@
         return $link;
     }
 
-    function query($query, $link) {
-        result = mysql_query($query, $link);
+    function make_query($query, $link) {
+        $result = mysql_query($query, $link);
         if (mysql_errno($link))
             echo mysql_errno($link).':'.mysql_error($link);
         return result;
     }
 
-    function close($link) {
+    function make_close($link) {
         mysql_close($link);
     }

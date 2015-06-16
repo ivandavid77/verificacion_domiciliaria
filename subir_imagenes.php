@@ -34,9 +34,9 @@
             $data = base64_encode(resize_image($file['tmp_name'],
                                        $config['resize']['max_width'],
                                        $config['resize']['max_height']));
-            query(insert_documentos_clientes($clave_cuenta, $data), $link);
+            make_query(insert_documentos_clientes($clave_cuenta, $data), $link);
         }
-        close($link);
+        make_close($link);
     }
 
     if (!isset($_FILES[$config['uploads']['varname']])) {

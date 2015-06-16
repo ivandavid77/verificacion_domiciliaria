@@ -10,10 +10,10 @@
     $config['db']['database'] = 'expediente';
 
     $link = make_link($config);
-    query(
+    make_query(
         'INSERT INTO documentos_clientes SET '.
         'clave_cuenta = "T99999999"', $link);
-    close($link);
+    make_close($link);
 
     // Redimensionado
     require_once('image_utils.php');
