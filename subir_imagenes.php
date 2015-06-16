@@ -42,6 +42,8 @@
     print_r($_FILES);
     echo '<br><br><br>';
     print_r($_FILES['uploads']);
+    echo '<br><br><br>';
+    echo $config['uploads']['varname'];
     if (!array_key_exists($config['uploads']['varname'], $_FILES)) {
         $_SESSION['msg']['type'] = 'warn';
         $_SESSION['msg']['data'] = 'Debe subir imagenes';
