@@ -55,11 +55,13 @@ if (basename(__file__) == basename($_SERVER['PHP_SELF'])) {
         if ($file['error'] != 0 ||
             @getimagesize($file['tmp_name']) === false ||
             @!is_uploaded_file($file['tmp_name'])) {
-            // Imagen con error, descartar e informar
-            echo $file['error'];
-            $msg['type'] = 'error';
-            $msg['data'] = 'Error al agregar '.$file['name'];
-            $_SESSION['messages'][] = $msg;
+            // Descartar
+            if ($file['error'] != 4) {
+                // informar
+                $msg['type'] = 'error';
+                $msg['data'] = 'Error al agregar '.$file['name'];
+                $_SESSION['messages'][] = $msg;
+            }
             continue;
         }
         $data = resize_image($file['tmp_name'],
@@ -77,5 +79,5 @@ if (basename(__file__) == basename($_SERVER['PHP_SELF'])) {
     }
 
     make_close($link);
-    //header('Location: index.php');
+    header('Location: index.php');
 }
