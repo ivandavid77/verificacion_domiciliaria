@@ -1,5 +1,5 @@
 <?php
-    require_once('db_utils.php')
+    require_once('db_utils.php');
 
     function insertar_documentos_clientes($clave_cuenta, $documento, $data) {
         $clave_cuenta = escape($clave_cuenta);
