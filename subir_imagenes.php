@@ -1,9 +1,26 @@
 <?php
-    $config = require('config.php');
-    require_once('inicio_sesion.php');
-    require_once('image_utils.php');
     require_once('db_utils.php');
     require_once('queries.php');
+
+    function set_data($cuenta, $id, $data, $link) {
+        $query = obtener_documentos_clientes($cuenta, $id);
+        if (make_query($query, $link) === false)
+            $query = insertar_documentos_clientes($cuenta, $id, $data);
+        else
+            $query = actualizar_documentos_clientes($cuenta, $id, $data);
+        return make_query($query, $link);
+    }
+
+if (basename(__file__) == basename($_SERVER['PHP_SELF'])) {
+    echo 'aca';
+    exit;
+
+    require_once('inicio_sesion.php');
+
+    $config = require('config.php');
+    require_once('image_utils.php');
+    ini_set('file_uploads','On');
+    set_time_limit(0);
 
     // sergio_ag.terra.com.br http://php.net/manual/es/reserved.variables.files.php
     function diverse_array($vector) {
@@ -14,37 +31,11 @@
         return $result;
     }
 
-    function guardar_imagenes($clave_cuenta, $id_documento, $uploads, $link,
-                              $max_width, $max_height) {
-        $sucess = false;
-        foreach ($uploads as $file) {
-            if ($file['error'] != UPLOAD_ERR_OK ||
-                @!is_uploaded_file($file['tmp_name']) ||
-                @getimagesize($file['tmp_name']) === false) {
-                continue; // Solo archivos sin errores
-            }
-            $data = base64_encode(resize_image($file['tmp_name'], $max_width,
-                                               $max_height));
-            $query = obtener_documentos_clientes($clave_cuenta, $id_documento);
-            if (make_query($query, $link) === false)
-                $fun = 'insertar_documentos_clientes';
-            else
-                $fun = 'actualizar_documentos_clientes';
-            $query = $$fun($clave_cuenta, $id_documento, $data);
-            $sucess = make_query($query, $link);
-        }
-        return $sucess;
-    }
-
-if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
-    ini_set('file_uploads','On');
-    set_time_limit(0);
-
     if (!array_key_exists($config['uploads']['varname'], $_FILES)) {
         $_SESSION['msg']['type'] = 'warn';
         $_SESSION['msg']['data'] = 'Debe subir imagenes';
         header('Location: index.php');
-        Exit;
+        exit;
     }
 
     if (!array_key_exists('clave_cuenta', $_POST) ||
@@ -52,25 +43,38 @@ if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
         $_SESSION['msg']['type'] = 'warn';
         $_SESSION['msg']['data'] = 'Indique la clave de cuenta';
         header('Location: index.php');
-        Exit;
+        exit;
     }
 
     $link = make_link($config['db']['host'], $config['db']['user'],
                       $config['db']['password'], $config['db']['database']);
-
-    $clave_cuenta = sanitize_string($_POST['clave_cuenta']);
+    $cuenta = sanitize_string($_POST['clave_cuenta']);
+    $id = $config['document']['begin_with_id'];
     $uploads = diverse_array($_FILES[$config['uploads']['varname']]);
-    $sucess = guardar_imagenes($clave_cuenta,
-                               $config['document']['begin_with_id'],
-                               $uploads,
-                               $config['resize']['max_width'],
-                               $config['resize']['max_height']);
-    if ($sucess) {
-        $_SESSION['msg']['type'] = 'info';
-        $_SESSION['msg']['data'] = 'Se han agregado las imagenes';
-    } else {
-        $_SESSION['msg']['type'] = 'error';
-        $_SESSION['msg']['data'] = 'Error al guardar imagenes';
+    $_SESSION['messages'] = array();
+
+    foreach ($uploads as $file) {
+        if ($file['error'] != 0 ||
+            @getimagesize($file['tmp_name']) === false ||
+            @!is_uploaded_file($file['tmp_name'])) {
+            // Imagen con error, descartar e informar
+            $msg['type'] = 'error';
+            $msg['data'] = 'Error al agregar '.$file['name'];
+            $_SESSION['messages'][] = $msg;
+            continue;
+        }
+        $data = resize_image($file['tmp_name'],
+                             $config['resize']['max_width'],
+                             $config['resize']['max_height']);
+        $sucess = set_data($cuenta, $id++, base64_encode($data), $link);
+        if ($sucess) {
+            $msg['type'] = 'info';
+            $msg['data'] = 'Se ha agrego '.$file['name'];
+        } else {
+            $msg['type'] = 'error';
+            $msg['data'] = 'Error al agregar '.$file['name'];
+        }
+        $_SESSION['messages'][] = $msg;
     }
 
     make_close($link);

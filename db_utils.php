@@ -24,7 +24,7 @@
     }
 
     function escape($text) {
-        return mysql_real_escape_string($text);
+        return mysql_real_escape_string(strval($text));
     }
 
     function sanitize_string($text) {

@@ -16,10 +16,11 @@
         <input type="submit" value="Cargar fotos">
     </form>
 	<?php
-		if (isset($_SESSION['msg'])) {
-			echo '<p class="'.$_SESSION['msg']['type'].'">'.$_SESSION['msg']['data'].'</p>';
-			unset($_SESSION['msg']);
+		if (isset($_SESSION['messages'])) {
+			foreach ($_SESSION['messages'] as $msg)
+				echo '<p class="'.$msg['type'].'">'.$msg['data'].'</p>';
 		}
+		unset($_SESSION['messages']);
 	?>
 </body>
 </html>
