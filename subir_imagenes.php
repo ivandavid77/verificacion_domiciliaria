@@ -56,6 +56,7 @@ if (basename(__file__) == basename($_SERVER['PHP_SELF'])) {
             @getimagesize($file['tmp_name']) === false ||
             @!is_uploaded_file($file['tmp_name'])) {
             // Imagen con error, descartar e informar
+            echo $file['error'];
             $msg['type'] = 'error';
             $msg['data'] = 'Error al agregar '.$file['name'];
             $_SESSION['messages'][] = $msg;
@@ -67,7 +68,7 @@ if (basename(__file__) == basename($_SERVER['PHP_SELF'])) {
         $sucess = set_data($cuenta, $id++, base64_encode($data), $link);
         if ($sucess) {
             $msg['type'] = 'info';
-            $msg['data'] = 'Se ha agrego '.$file['name'];
+            $msg['data'] = 'Se agrego '.$file['name'];
         } else {
             $msg['type'] = 'error';
             $msg['data'] = 'Error al agregar '.$file['name'];
@@ -76,5 +77,5 @@ if (basename(__file__) == basename($_SERVER['PHP_SELF'])) {
     }
 
     make_close($link);
-    header('Location: index.php');
+    //header('Location: index.php');
 }
