@@ -3,8 +3,8 @@
 
     function insertar_documentos_clientes($clave_cuenta, $documento, $data) {
         $clave_cuenta = escape($clave_cuenta);
-        $documento = escape($clave_cuenta);
-        $data = escape($clave_cuenta);
+        $documento = escape($documento);
+        $data = escape($data);
         return
             'INSERT INTO documentos_clientes SET '.
             "clave_cuenta = \"$clave_cuenta\",".
