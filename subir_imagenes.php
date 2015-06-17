@@ -12,9 +12,6 @@
     }
 
 if (basename(__file__) == basename($_SERVER['PHP_SELF'])) {
-    echo 'aca';
-    exit;
-
     require_once('inicio_sesion.php');
 
     $config = require('config.php');

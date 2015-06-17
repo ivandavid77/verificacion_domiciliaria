@@ -1,4 +1,7 @@
 <?php
+    ini_set('display_errors', 1);
+    error_reporting(E_ALL);
+
     require_once('../subir_imagenes.php');
     require_once('../db_utils.php');
     require_once('../queries.php');
