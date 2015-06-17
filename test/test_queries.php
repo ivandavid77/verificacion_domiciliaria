@@ -19,7 +19,8 @@
 
 
     echo ' [x] insertar_documentos_clientes<br>';
-    $sucess = make_query(insertar_documentos_clientes('T99999999', '11', '1234');
+    $sucess = make_query(insertar_documentos_clientes('T99999999', '11',
+                                                      '1234'));
     if ($sucess)
         echo ' [x] sucess<br>';
     else
@@ -38,7 +39,8 @@
 
 
     echo ' [x] actualizar_documentos_clientes<br>';
-    $sucess = make_query(actualizar_documentos_clientes('T99999999', '11', '5678'));
+    $sucess = make_query(actualizar_documentos_clientes('T99999999', '11',
+                                                        '5678'));
     if ($sucess)
         echo ' [x] sucess<br>';
     else
