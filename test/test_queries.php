@@ -4,13 +4,13 @@
     require_once('../queries.php');
     require_once('../db_utils.php');
 
-    $config['db']['host'] = '172.16.202.15';
-    $config['db']['user'] = 'test';
-    $config['db']['password'] = '123456';
-    $config['db']['database'] = 'expediente';
+    $host = '172.16.202.15';
+    $user = 'test';
+    $password = '123456';
+    $database = 'expediente';
 
     echo 'Conectando<br><br>';
-    $link = make_link($config);
+    $link = make_link($host, $user, $password, $database);
 
     echo 'Inicializando<br><br>';
     make_query(borrar_documentos_clientes('T99999999', '11'));
