@@ -13,6 +13,8 @@ $config['uploads']['varname'] = 'uploads';
 $config['resize']['max_width'] = 200;
 $config['resize']['max_height'] = 150;
 
+$config['document']['begin_with_id'] = 11;
+
 $config['debug'] = true;
 
 if ($config['debug']) {

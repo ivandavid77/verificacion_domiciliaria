@@ -21,7 +21,7 @@
         return $result;
     }
 
-    function guardar_imagenes($clave_cuenta, $uploads, $config) {
+    function guardar_imagenes($clave_cuenta, $uploads, $id_documento, $config) {
         $link = make_link($config);
         $uploads = diverse_array($uploads);
         $saved = false;
@@ -31,13 +31,19 @@
                 @getimagesize($file['tmp_name']) === false) {
                 continue; // Solo archivos sin errores
             }
-            //$name = md5_file($file['tmp_name']);
             $data = base64_encode(resize_image(
                                             $file['tmp_name'],
                                             $config['resize']['max_width'],
                                             $config['resize']['max_height']));
-            make_query(insert_documentos_clientes($clave_cuenta, $data), $link);
-            $saved = true;
+            $exists = make_query(obtener_documentos_clientes($clave_cuenta,
+                                                            $id_documento));
+            if ($exists === false)
+                $fun = 'insertar_documentos_clientes';
+            else
+                $fun = 'actualizar_documentos_clientes';
+
+            $query = $$fun($clave_cuenta, $id_documento, $data);
+            $saved = make_query($query, $link);
         }
         make_close($link);
         return $saved;
@@ -58,9 +64,11 @@
         Exit;
     }
 
-    if (guardar_imagenes(sanitizar($_POST['clave_cuenta']),
-                     $_FILES[$config['uploads']['varname']],
-                     $config)) {
+    if (guardar_imagenes(
+            sanitizar($_POST['clave_cuenta']),
+            $_FILES[$config['uploads']['varname']],
+            $config['document']['begin_with_id'],
+            $config)) {
         $_SESSION['msg']['type'] = 'info';
         $_SESSION['msg']['data'] = 'Se han agregado las imagenes';
     } else {

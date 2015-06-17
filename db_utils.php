@@ -23,3 +23,7 @@
     function get_dict($result) {
         return mysql_fetch_assoc($result);
     }
+
+    function escape($text) {
+        return mysql_real_escape_string($text);
+    }

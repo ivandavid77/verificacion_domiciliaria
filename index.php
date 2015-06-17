@@ -13,8 +13,6 @@
         <input name="uploads[]" type="file"><br>
         <input name="uploads[]" type="file"><br>
         <input name="uploads[]" type="file"><br>
-        <input name="uploads[]" type="file"><br>
-        <input name="uploads[]" type="file"><br>
         <input type="submit" value="Cargar fotos">
     </form>
 	<?php
