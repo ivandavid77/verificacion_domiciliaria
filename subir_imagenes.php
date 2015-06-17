@@ -8,7 +8,7 @@
             $query = insertar_documentos_clientes($cuenta, $id, $data);
         else
             $query = actualizar_documentos_clientes($cuenta, $id, $data);
-        print_r $query;
+        print_r($query);
         return make_query($query, $link);
     }
 
