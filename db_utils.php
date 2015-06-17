@@ -1,8 +1,7 @@
 <?php
-    function make_link($config) {
-        $link = mysql_connect($config['db']['host'], $config['db']['user'],
-                              $config['db']['password']);
-        mysql_select_db($config['db']['database'], $link);
+    function make_link($host, $user, $password, $database) {
+        $link = mysql_connect($host, $user, $password);
+        mysql_select_db($database, $link);
         if (mysql_errno($link)) {
             echo mysql_errno($link).':'.mysql_error($link);
         }
@@ -26,4 +25,8 @@
 
     function escape($text) {
         return mysql_real_escape_string($text);
+    }
+
+    function sanitize_string($text) {
+        return $text;
     }
