@@ -5,13 +5,10 @@
     function set_data($cuenta, $id, $data, $link) {
         $query = obtener_documentos_clientes($cuenta, $id);
         $result = make_query($query, $link);
-        while ($row = mysql_fetch_assoc($result))
-            print_r($row);
-        if (make_query($query, $link) === false)
+        if (mysql_num_rows($result) == 0)
             $query = insertar_documentos_clientes($cuenta, $id, $data);
         else
             $query = actualizar_documentos_clientes($cuenta, $id, $data);
-        print_r($query);
         return make_query($query, $link);
     }
 
