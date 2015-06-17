@@ -13,14 +13,15 @@
     $link = make_link($host, $user, $password, $database);
 
     echo 'Inicializando<br><br>';
-    make_query(borrar_documentos_clientes('T99999999', '11'));
+    $query = borrar_documentos_clientes('T99999999', '11');
+    make_query($query, $link);
 
     echo 'Inician consultas<br><br>';
 
 
     echo ' [x] insertar_documentos_clientes<br>';
-    $sucess = make_query(insertar_documentos_clientes('T99999999', '11',
-                                                      '1234'));
+    $query = insertar_documentos_clientes('T99999999', '11', '1234');
+    $sucess = make_query($query, $link);
     if ($sucess)
         echo ' [x] sucess<br>';
     else
@@ -28,7 +29,8 @@
 
 
     echo ' [x] obtener_documentos_clientes<br>';
-    $result = make_query(obtener_documentos_clientes('T99999999', '11'));
+    $query = obtener_documentos_clientes('T99999999', '11');
+    $result = make_query($query, $link);
     $sucess = false;
     while ($row = get_dict($result))
         if ($row['archivo'] == '1234') $sucess = true;
@@ -39,8 +41,8 @@
 
 
     echo ' [x] actualizar_documentos_clientes<br>';
-    $sucess = make_query(actualizar_documentos_clientes('T99999999', '11',
-                                                        '5678'));
+    $query = actualizar_documentos_clientes('T99999999', '11', '5678');
+    $sucess = make_query($query, $link);
     if ($sucess)
         echo ' [x] sucess<br>';
     else
@@ -48,7 +50,8 @@
 
 
     echo ' [x] Comprobando actualizacion con "obtener_documentos_clientes"<br>';
-    $result = make_query(obtener_documentos_clientes('T99999999', '11'));
+    $query = obtener_documentos_clientes('T99999999', '11');
+    $result = make_query($query, $link);
     $sucess = false;
     while ($row = get_dict($result))
         if ($row['archivo'] == '5678') $sucess = true;
@@ -59,7 +62,8 @@
 
 
     echo ' [x] borrar_documentos_clientes<br>';
-    $sucess = make_query(borrar_documentos_clientes('T99999999', '11'));
+    $query = borrar_documentos_clientes('T99999999', '11');
+    $sucess = make_query($query, $link);
     if ($sucess)
         echo ' [x] sucess<br>';
     else
