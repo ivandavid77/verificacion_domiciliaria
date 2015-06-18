@@ -37,7 +37,8 @@
     else
         echo ' [x] FAIL<br>';
 
-
+    echo 'aca';
+    /*
     echo ' [x] actualizar_documentos_clientes<br>';
     $query = actualizar_documentos_clientes('T99999999', '11', '5678');
     if (make_query($query, $link));
