@@ -38,5 +38,43 @@
     else
         echo ' [x] FAIL<br>';
 
-
     make_close($link);
+
+
+    echo 'Inicializando<br><br>';
+    @unlink(dirname (__file__).'/test_image_target.jpg');
+
+    echo ' [x] resize_image   test_image_source.jpg<br>';
+    $source = dirname(__FILE__).'/test_image_source.jpg';
+    $target = dirname(__FILE__).'/test_image_target.jpg';
+    resize_image($source, 200, 150, $target);
+    echo 'Original <a href="test_image_source.jpg">test_image_source.jpg</a>');
+    echo 'Resized  <a href="test_image_target.jpg">test_image_target.jpg</a>');
+
+
+    echo 'Inicializando<br><br>';
+    $upload['upload']['name'] = array();
+    $upload['upload']['name'][0] = 'file0.txt';
+    $upload['upload']['name'][1] = 'file1.txt';
+
+    $upload['upload']['type'] = array();
+    $upload['upload']['type'][0] = 'text/plain';
+    $upload['upload']['type'][1] = 'text/html';
+
+    echo ' Original array: <br>';
+    print_r($upload);
+
+    echo ' [x] diverse_array<br>';
+    $diversed = diverse_array($upload['upload']);
+    print_r($diversed);
+    if (isset($diversed[0]['name']) &&
+        $diversed[0]['name'] == 'file0.txt' &&
+        isset($diversed[0]['type']) &&
+        $diversed[0]['type'] == 'text/plain' &&
+        isset($diversed[1]['name']) &&
+        $diversed[1]['name'] == 'file1.txt' &&
+        isset($diversed[1]['type']) &&
+        $diversed[1]['type'] == 'text/html')
+        echo ' [x] sucess<br>';
+    else
+        echo ' [x] FAIL<br>';

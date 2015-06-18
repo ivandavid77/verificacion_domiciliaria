@@ -2,6 +2,7 @@
     require_once('db_utils.php');
     require_once('queries.php');
 
+
     function set_data($cuenta, $id, $data, $link) {
         $query = obtener_documentos_clientes($cuenta, $id);
         $result = make_query($query, $link);
@@ -12,13 +13,30 @@
         return make_query($query, $link);
     }
 
-if (basename(__file__) == basename($_SERVER['PHP_SELF'])) {
-    require_once('inicio_sesion.php');
 
-    $config = require('config.php');
-    require_once('image_utils.php');
-    ini_set('file_uploads','On');
-    set_time_limit(0);
+    // http://php.net/manual/en/function.imagecopyresampled.php
+    function resize_image($filename, $max_w, $max_h, $to_file=null) {
+        list($src_w, $src_h) = getimagesize($filename);
+        $src_ratio = $src_w/$src_h;
+        if ($max_w/$max_h > $src_ratio) {
+            $max_h = $max_h*$src_ratio;
+        } else {
+           $max_h = $max_w/$src_ratio;
+        }
+        $img_p = imagecreatetruecolor($max_w, $max_h);
+        $img = imagecreatefromjpeg($filename);
+        imagecopyresampled($img_p, $img, 0, 0, 0, 0, $max_w, $max_h, $src_w,
+                           $src_h);
+        if ($to_file === null) {
+            ob_start();
+            imagejpeg($img_p, null, 100);
+            return ob_get_clean();
+        } else {
+            imagejpeg($img_p, $to_file, 100);
+            return $to_file;
+        }
+    }
+
 
     // sergio_ag.terra.com.br http://php.net/manual/es/reserved.variables.files.php
     function diverse_array($vector) {
@@ -28,6 +46,16 @@ if (basename(__file__) == basename($_SERVER['PHP_SELF'])) {
                 $result[$key2][$key1] = $value2;
         return $result;
     }
+
+
+
+
+if (basename(__file__) == basename($_SERVER['PHP_SELF'])) {
+    require_once('inicio_sesion.php');
+
+    $config = require('config.php');
+    ini_set('file_uploads','On');
+    set_time_limit(0);
 
     if (!array_key_exists($config['uploads']['varname'], $_FILES)) {
         $_SESSION['msg']['type'] = 'warn';
@@ -44,6 +72,8 @@ if (basename(__file__) == basename($_SERVER['PHP_SELF'])) {
         exit;
     }
 
+
+
     $link = make_link($config['db']['host'], $config['db']['user'],
                       $config['db']['password'], $config['db']['database']);
     $cuenta = sanitize_string($_POST['clave_cuenta']);
@@ -52,6 +82,10 @@ if (basename(__file__) == basename($_SERVER['PHP_SELF'])) {
     $_SESSION['messages'] = array();
 
     foreach ($uploads as $file) {
+
+
+
+
         if ($file['error'] != 0 ||
             @getimagesize($file['tmp_name']) === false ||
             @!is_uploaded_file($file['tmp_name'])) {
