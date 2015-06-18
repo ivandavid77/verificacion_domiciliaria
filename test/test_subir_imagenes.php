@@ -52,6 +52,30 @@
     echo 'Resized  <a href="test_image_target.jpg">test_image_target.jpg</a>');
 
 
+
+    $source = dirname(__FILE__).'/test_image_source.jpg';
+    echo ' [x] valid_image   name: test_image_source.jpg, status: 4 <br>';
+    list($valid, $msg) = valid_image('test_image_source', $source, 4);
+    if ($valid == false && $msg == '')
+        echo ' [x] sucess<br>';
+    else
+        echo ' [x] FAIL<br><br>';
+
+    echo ' [x] valid_image   name: test_image_source.jpg, status: 0, check_uploaded=false <br>';
+    list($valid, $msg) = valid_image('test_image_source', $source, 0, false);
+    if ($valid == true && $msg == '')
+        echo ' [x] sucess<br>';
+    else
+        echo ' [x] FAIL<br>';
+
+    echo ' [x] valid_image   name: test_image_source.jpg, status: 0<br>';
+    list($valid, $msg) = valid_image('test_image_source', $source, 0);
+    if ($valid == false)
+        echo ' [x] sucess<br>';
+    else
+        echo ' [x] FAIL<br><br>';
+
+
     echo 'Inicializando<br><br>';
     $upload['upload']['name'] = array();
     $upload['upload']['name'][0] = 'file0.txt';

@@ -18,7 +18,9 @@
 	<?php
 		if (isset($_SESSION['messages'])) {
 			foreach ($_SESSION['messages'] as $msg)
-				echo '<p class="'.$msg['type'].'">'.$msg['data'].'</p>';
+				if ($msg['data'] != '')
+					echo '<p class="'.$msg['type'].'">'.$msg['data'].'</p>';
+
 		}
 		unset($_SESSION['messages']);
 	?>

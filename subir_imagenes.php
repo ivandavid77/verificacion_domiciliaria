@@ -48,68 +48,79 @@
     }
 
 
+    function create_msg($type, $data) {
+        $msg['type'] = $type;
+        $msg['data'] = $data;
+        return $msg;
+    }
+
+
+    function create_err($data) {
+        return create_msg('error', $data);
+    }
+
+
+    function create_info($data) {
+        return create_msg('info', $data);
+    }
+
+
+    function create_warn($data) {
+        return create_msg('warn', $data);
+    }
+
+
+    function valid_image($name, $filepath, $status, $check_uploaded=true) {
+        if ($status == 4)
+            return array(false, '');
+        if ($status != 0 ||
+            @getimagesize($filepath) === false ||
+            ($check_uploaded && @!is_uploaded_file($filepath)) {
+            return array(false, create_err("Error al agregar $name"));
+        }
+        return array(true, '');
+    }
 
 
 if (basename(__file__) == basename($_SERVER['PHP_SELF'])) {
     require_once('inicio_sesion.php');
 
-    $config = require('config.php');
+    $cfg = require('config.php');
     ini_set('file_uploads','On');
     set_time_limit(0);
-
-    if (!array_key_exists($config['uploads']['varname'], $_FILES)) {
-        $_SESSION['msg']['type'] = 'warn';
-        $_SESSION['msg']['data'] = 'Debe subir imagenes';
-        header('Location: index.php');
-        exit;
-    }
-
-    if (!array_key_exists('clave_cuenta', $_POST) ||
-        trim($_POST['clave_cuenta']) == '') {
-        $_SESSION['msg']['type'] = 'warn';
-        $_SESSION['msg']['data'] = 'Indique la clave de cuenta';
-        header('Location: index.php');
-        exit;
-    }
-
-
-
-    $link = make_link($config['db']['host'], $config['db']['user'],
-                      $config['db']['password'], $config['db']['database']);
-    $cuenta = sanitize_string($_POST['clave_cuenta']);
-    $id = $config['document']['begin_with_id'];
-    $uploads = diverse_array($_FILES[$config['uploads']['varname']]);
     $_SESSION['messages'] = array();
 
-    foreach ($uploads as $file) {
+    if (!array_key_exists($cfg['uploads']['varname'], $_FILES)) {
+        $_SESSION['messages'][] = create_warn('Debe subir imagenes');
+        header('Location: index.php');
+        exit;
+    }
 
+    if (!array_key_exists('clave_cuenta', $_POST) || trim($_POST['clave_cuenta']) == '') {
+        $_SESSION['messages'][] = create_warn('Indique la clave de cuenta');
+        header('Location: index.php');
+        exit;
+    }
 
+    $link = make_link($cfg['db']['host'], $cfg['db']['user'],
+                      $cfg['db']['password'], $cfg['db']['database']);
+    $cuenta = sanitize_string($_POST['clave_cuenta']);
+    $id_doc = $cfg['document']['begin_with_id'];
+    $uploads = diverse_array($_FILES[$cfg['uploads']['varname']]);
 
-
-        if ($file['error'] != 0 ||
-            @getimagesize($file['tmp_name']) === false ||
-            @!is_uploaded_file($file['tmp_name'])) {
-            // Descartar
-            if ($file['error'] != 4) {
-                // informar
-                $msg['type'] = 'error';
-                $msg['data'] = 'Error al agregar '.$file['name'];
-                $_SESSION['messages'][] = $msg;
-            }
+    foreach ($uploads as $f) {
+        list($valid, $error) = valid_image($f['name'], $f['tmp_name'], $f['error']);
+        if (!$valid) {
+            $_SESSION['messages'][] = $error;
             continue;
         }
-        $data = resize_image($file['tmp_name'],
-                             $config['resize']['max_width'],
-                             $config['resize']['max_height']);
-        $sucess = set_data($cuenta, $id++, base64_encode($data), $link);
-        if ($sucess) {
-            $msg['type'] = 'info';
-            $msg['data'] = 'Se agrego '.$file['name'];
-        } else {
-            $msg['type'] = 'error';
-            $msg['data'] = 'Error al agregar '.$file['name'];
-        }
-        $_SESSION['messages'][] = $msg;
+        $data = resize_image($f['tmp_name'], $cfg['resize']['max_width'],
+                             $cfg['resize']['max_height']);
+        if (set_data($cuenta, $id_doc, base64_encode($data), $link))
+            $_SESSION['messages'][] = create_info('Se agrego '.$f['name']);
+        else
+            $_SESSION['messages'][] = create_error('Error al agregar '.$f['name']);
+        $id_doc++;
     }
 
     make_close($link);
