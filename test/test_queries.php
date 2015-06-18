@@ -3,8 +3,7 @@
     error_reporting(E_ALL);
     require_once('../queries.php');
     require_once('../db_utils.php');
-    echo 'aca';
-    /*
+
     $host = '172.16.202.15';
     $user = 'test';
     $password = '123456';
@@ -38,7 +37,8 @@
     else
         echo ' [x] FAIL<br>';
 
-
+    echo 'aca';
+    /*
     echo ' [x] actualizar_documentos_clientes<br>';
     $query = actualizar_documentos_clientes('T99999999', '11', '5678');
     if (make_query($query, $link));
