@@ -40,7 +40,7 @@
 
     make_close($link);
 
-    /*
+
     echo 'Inicializando<br><br>';
     @unlink(dirname (__file__).'/test_image_target.jpg');
 

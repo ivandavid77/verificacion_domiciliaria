@@ -75,7 +75,7 @@
             return array(false, '');
         if ($status != 0 ||
             @getimagesize($filepath) === false ||
-            ($check_uploaded && @!is_uploaded_file($filepath)) {
+            ($check_uploaded && @!is_uploaded_file($filepath))) {
             return array(false, create_err("Error al agregar $name"));
         }
         return array(true, '');
