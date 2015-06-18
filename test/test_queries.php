@@ -3,7 +3,7 @@
     error_reporting(E_ALL);
     require_once('../queries.php');
     require_once('../db_utils.php');
-
+    /*
     $host = '172.16.202.15';
     $user = 'test';
     $password = '123456';
