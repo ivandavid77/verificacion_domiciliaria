@@ -42,13 +42,13 @@
 
 
     echo 'Inicializando<br><br>';
-    unlink(dirname(__file__).'/test_image_target.jpg');
+    @unlink(dirname(__file__).'/test_image_target.jpg');
 
-    /*
+
     echo ' [x] resize_image   test_image_source.jpg<br>';
     $source = dirname(__FILE__).'/test_image_source.jpg';
     $target = dirname(__FILE__).'/test_image_target.jpg';
-    resize_image($source, 200, 150, $target);
+    /*resize_image($source, 200, 150, $target);
     echo 'Original <a href="test_image_source.jpg">test_image_source.jpg</a>');
     echo 'Resized  <a href="test_image_target.jpg">test_image_target.jpg</a>');
 
