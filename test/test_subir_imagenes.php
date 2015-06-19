@@ -99,6 +99,6 @@
         $diversed[1]['name'] == 'file1.txt' &&
         isset($diversed[1]['type']) &&
         $diversed[1]['type'] == 'text/html')
-        echo ' [x] sucess<br>';
+        echo '<br> [x] sucess<br>';
     else
-        echo ' [x] FAIL<br>';
+        echo '<br> [x] FAIL<br>';
