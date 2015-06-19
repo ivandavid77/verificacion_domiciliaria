@@ -49,8 +49,8 @@
     $source = dirname(__FILE__).'/test_image_source.jpg';
     $target = dirname(__FILE__).'/test_image_target.jpg';
     resize_image($source, 200, 150, $target);
-    echo 'Original <a href="test_image_source.jpg">test_image_source.jpg</a>';
-    echo 'Resized  <a href="test_image_target.jpg">test_image_target.jpg</a>';
+    echo 'Original <a href="test_image_source.jpg">test_image_source.jpg</a><br>';
+    echo 'Resized  <a href="test_image_target.jpg">test_image_target.jpg</a><br><br>';
 
 
     $source = dirname(__FILE__).'/test_image_source.jpg';
@@ -88,7 +88,7 @@
     echo ' Original array: <br>';
     print_r($upload);
 
-    echo ' [x] diverse_array<br>';
+    echo '<br> [x] diverse_array<br>';
     $diversed = diverse_array($upload['upload']);
     print_r($diversed);
     if (isset($diversed[0]['name']) &&
