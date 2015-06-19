@@ -40,7 +40,7 @@
 
     make_close($link);
 
-    /*
+
     echo 'Inicializando<br><br>';
     @unlink(dirname (__file__).'/test_image_target.jpg');
 
@@ -52,7 +52,7 @@
     echo 'Resized  <a href="test_image_target.jpg">test_image_target.jpg</a>');
 
 
-
+    /*
     $source = dirname(__FILE__).'/test_image_source.jpg';
     echo ' [x] valid_image   name: test_image_source.jpg, status: 4 <br>';
     list($valid, $msg) = valid_image('test_image_source', $source, 4);
