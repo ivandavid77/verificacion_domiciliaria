@@ -1,17 +1,17 @@
 <?php
-    require('inicio_sesion.php');
+session_start();
 ?>
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="iso-8859-1">
-  <title>Carga de imagenes</title>
+  <title>Inicio de sesion</title>
   <style>
     html, body {height:100%;}
     html {display:table; width:100%;}
     body {display:table-cell; text-align:center; vertical-align:middle;}
     .fuente_aumentada {
-      font-size: 200%;
+      font-size: 300%;
     }
     .altura_aumentada {
       transform:scale(3,4); /* W3C */
@@ -23,37 +23,42 @@
   </style>
 </head>
 <body>
-	<form action="subir_imagenes.php" method="post" enctype="multipart/form-data">
+  <h1 class="fuente_aumentada">Iniciar Sesion</h1>
+
+	<form action="autentificar_usuario.php" method="post">
     <br>
     <br>
-    <input class="altura_aumentada" name="clave_cuenta" type="text" placeholder="cuenta de cliente">
-    <br>
-    <br>
-    <br>
-    <br>
-    <label class="fuente_aumentada" for="imagen1">Foto 1</label>
-    <input class="fuente_aumentada" name="imagen1" type="file">
-    <br>
-    <br>
-    <label class="fuente_aumentada" for="imagen2">Foto 2</label>
-    <input class="fuente_aumentada" name="imagen2" type="file">
+    <input class="altura_aumentada" name="user" type="text" placeholder="usuario">
     <br>
     <br>
     <br>
     <br>
-    <input class="fuente_aumentada" type="submit" value="Cargar fotos">
+    <br>
+    <br>
+    <br>
+    <br>
+    <input class="altura_aumentada" name="password" type="password" placeholder="contraseña">
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <input class="fuente_aumentada" type="submit" value="Enviar">
   </form>
   <br>
   <br>
   <br>
 <?php
-if (isset($_SESSION['messages'])) {
-    foreach ($_SESSION['messages'] as $msg) {
+if (isset($_SESSION['login_messages'])) {
+    foreach ($_SESSION['login_messages'] as $msg) {
         if ($msg['data'] != '') {
 	          echo '<p class="'.$msg['type'].' fuente_aumentada">'.$msg['data'].'</p>';
         }
     }
-    unset($_SESSION['messages']);
+    unset($_SESSION['login_messages']);
 }
 ?>
 </body>

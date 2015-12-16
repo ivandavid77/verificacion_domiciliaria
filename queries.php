@@ -1,46 +1,79 @@
 <?php
-    require_once('db_utils.php');
+require_once('db_utils.php');
 
-    function insertar_documentos_clientes($clave_cuenta, $documento, $data) {
-        $clave_cuenta = escape(strval($clave_cuenta));
-        $documento = escape(strval($documento));
-        $data = escape(strval($data));
-        return
-            'INSERT INTO documentos_clientes SET '.
-            "clave_cuenta = \"$clave_cuenta\",".
-            "id_documento = \"$documento\",".
-            "archivo = \"$data\"";
-    }
 
-    function obtener_documentos_clientes($clave_cuenta, $documento) {
-        $clave_cuenta = escape(strval($clave_cuenta));
-        $documento = escape(strval($documento));
-        return
-            'SELECT archivo '.
-            'FROM documentos_clientes '.
-            'WHERE '.
-                    "clave_cuenta = \"$clave_cuenta\" AND ".
-                    "id_documento = \"$documento\"";
-    }
+function sqlUsuario($user, $password, $link)
+{
+    $user = escape(strval($user), $link);
+    $password = escape(strval($password), $link);
+    return
+        "SELECT clave_usuario
+        FROM corporativo.usuarios
+        WHERE
+            usuario = \"$user\" AND
+            contrasenna = OLD_PASSWORD(\"$password\")
+        LIMIT 1";
+}
 
-    function borrar_documentos_clientes($clave_cuenta, $documento) {
-        $clave_cuenta = escape(strval($clave_cuenta));
-        $documento = escape(strval($documento));
-        return
-            'DELETE FROM documentos_clientes '.
-            'WHERE '.
-                    "clave_cuenta = \"$clave_cuenta\" AND ".
-                    "id_documento = \"$documento\"";
-    }
+function sqlCuenta($claveCuenta, $link)
+{
+    $claveCuenta = escape(strval($claveCuenta), $link);
+    return
+        "SELECT 1
+        FROM corporativo.cuentas
+        WHERE clave_cuenta = \"$claveCuenta\"";
+}
 
-    function actualizar_documentos_clientes($clave_cuenta, $documento, $data) {
-        $clave_cuenta = escape(strval($clave_cuenta));
-        $documento = escape(strval($documento));
-        $data = escape($data);
-        return
-            'UPDATE documentos_clientes SET '.
-            "archivo = \"$data\" ".
-            'WHERE '.
-                    "clave_cuenta = \"$clave_cuenta\" AND ".
-                    "id_documento = \"$documento\"";
-    }
+
+function sqlInsertarDocumento($claveCuenta, $claveUsuario, $idDoc, $datosB64, $link)
+{
+    $claveCuenta = escape(strval($claveCuenta), $link);
+    $claveUsuario = strval($claveUsuario);
+    $idDoc = escape(strval($idDoc), $link);
+    $datosB64 = escape(strval($datosB64), $link);
+    return
+        "INSERT INTO expediente.documentos_clientes SET
+        clave_cuenta = \"$claveCuenta\",
+        id_documento = \"$idDoc\",
+        archivo = \"$datosB64\",
+        fecha_actualizacion = CURDATE(),
+        usuario_actualiza = \"$claveUsuario\"";
+}
+
+function sqlActualizarDocumento($claveCuenta, $claveUsuario, $idDoc, $datosB64, $link)
+{
+    $claveCuenta = escape(strval($claveCuenta), $link);
+    $claveUsuario = strval($claveUsuario);
+    $idDoc = escape(strval($idDoc), $link);
+    return
+        "UPDATE expediente.documentos_clientes SET
+        archivo = \"$datosB64\",
+        fecha_actualizacion = CURDATE(),
+        usuario_actualiza = \"$claveUsuario\"
+        WHERE
+            clave_cuenta = \"$claveCuenta\" AND
+            id_documento = \"$idDoc\"";
+}
+
+function sqlObtenerDocumento($claveCuenta, $idDoc, $link)
+{
+    $claveCuenta = escape(strval($claveCuenta), $link);
+    $idDoc = escape(strval($idDoc), $link);
+    return
+        "SELECT 1
+        FROM expediente.documentos_clientes
+        WHERE
+            clave_cuenta = \"$claveCuenta\" AND
+            id_documento = \"$idDoc\"";
+}
+
+function sqlBorrarDocumento($claveCuenta, $idDoc, $link)
+{
+    $claveCuenta = escape(strval($claveCuenta), $link);
+    $idDoc = escape(strval($idDoc));
+    return
+        "DELETE FROM expediente.documentos_clientes
+        WHERE
+            clave_cuenta = \"$claveCuenta\" AND
+            id_documento = \"$idDoc\"";
+}

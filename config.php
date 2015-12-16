@@ -1,19 +1,18 @@
 <?php
-/*$config['db']['host'] = '172.16.201.40';
-$config['db']['user'] = 'webverificacion';
-$config['db']['password'] = 'webconsulta';
-$config['db']['database'] = 'corporativo';*/
-$config['db']['host'] = '172.16.202.15';
-$config['db']['user'] = 'test';
-$config['db']['password'] = '123456';
-$config['db']['database'] = 'expediente';
+$config['db_expediente']['host'] = '172.16.200.23';
+$config['db_expediente']['user'] = 'verificador';
+$config['db_expediente']['password'] = 'verificador';
+$config['db_expediente']['database'] = 'expediente';
 
-$config['uploads']['varname'] = 'uploads';
+$config['db_corporativo']['host'] = '172.16.200.3';
+$config['db_corporativo']['user'] = 'verificador';
+$config['db_corporativo']['password'] = 'verificador';
+$config['db_corporativo']['database'] = 'corporativo';
 
-$config['resize']['max_width'] = 200;
-$config['resize']['max_height'] = 150;
+$config['resize']['max_width'] = 800;
+$config['resize']['max_height'] = 450;
 
-$config['document']['begin_with_id'] = 11;
+$config['session_timeout_duration'] = 900;
 
 $config['debug'] = true;
 

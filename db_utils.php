@@ -1,32 +1,43 @@
 <?php
-    function make_link($host, $user, $password, $database) {
-        $link = mysql_connect($host, $user, $password);
-        mysql_select_db($database, $link);
-        if (mysql_errno($link)) {
-            echo mysql_errno($link).':'.mysql_error($link);
-        }
-        return $link;
+function createLink($host, $user, $password, $database)
+{
+    $link = mysqli_connect($host, $user, $password, $database);
+    if (mysqli_connect_errno()) {
+        echo mysqli_connect_errno() . ':' .  mysqli_connect_error();
     }
+    return $link;
+}
 
-    function make_query($query, $link) {
-        $result = mysql_query($query, $link);
-        if (mysql_errno($link))
-            echo mysql_errno($link).':'.mysql_error($link);
-        return $result;
-    }
+function getNumRows($result)
+{
+    return mysqli_num_rows($result);
+}
 
-    function make_close($link) {
-        mysql_close($link);
+function doQuery($query, $link, &$err)
+{
+    $result = mysqli_query($link, $query);
+    if (mysqli_connect_errno()) {
+        $err = mysqli_connect_errno() . ':' .  mysqli_connect_error();
     }
+    return $result;
+}
 
-    function get_dict($result) {
-        return mysql_fetch_assoc($result);
-    }
+function doClose($link)
+{
+    mysqli_close($link);
+}
 
-    function escape($text) {
-        return mysql_real_escape_string(strval($text));
-    }
+function getDict($result)
+{
+    return mysqli_fetch_assoc($result);
+}
 
-    function sanitize_string($text) {
-        return $text;
-    }
+function escape($text, $link)
+{
+    return mysqli_real_escape_string($link, strval($text));
+}
+
+function sanitizeString($text)
+{
+    return $text;
+}

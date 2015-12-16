@@ -1,128 +1,181 @@
 <?php
-    require_once('db_utils.php');
-    require_once('queries.php');
+require_once('db_utils.php');
+require_once('queries.php');
 
 
-    function set_data($cuenta, $id, $data, $link) {
-        $query = obtener_documentos_clientes($cuenta, $id);
-        $result = make_query($query, $link);
-        if (mysql_num_rows($result) == 0)
-            $query = insertar_documentos_clientes($cuenta, $id, $data);
-        else
-            $query = actualizar_documentos_clientes($cuenta, $id, $data);
-        return make_query($query, $link);
+function createMsg($where, $type, $msg)
+{
+    if (!array_key_exists($where, $_SESSION)) {
+        $_SESSION[$where] = array();
+    }
+    $data['type'] = $type;
+    $data['data'] = $msg;
+    $_SESSION[$where][] = $data;
+}
+
+
+function err($msg)
+{
+    createMsg('messages', 'error', $msg);
+}
+
+
+function info($msg)
+{
+    createMsg('messages', 'info', $msg);
+}
+
+
+function warn($msg)
+{
+    createMsg('messages', 'warn', $msg);
+}
+
+
+function guardarImagen($cuenta, $claveUsuario, $idDoc, $datosB64, $link, &$err)
+{
+    $sql = sqlObtenerDocumento($cuenta, $idDoc, $link);
+    $result = doQuery($sql, $link);
+    if (getNumRows($result) == 0) {
+        $sql = sqlInsertarDocumento($cuenta, $claveUsuario, $idDoc, $datosB64, $link);
+    } else {
+        $sql = sqlActualizarDocumento($cuenta, $claveUsuario, $idDoc, $datosB64, $link);
+    }
+    $err = '';
+    $result = doQuery($sql, $link, $err);
+    if ($err != '') {
+        return false;
+    }
+    if ($result === false) {
+        return false;
+    }
+    return true;
+}
+
+
+// http://php.net/manual/en/function.imagecopyresampled.php
+function resizeImage($filename, $max_w, $max_h, $to_file = null)
+{
+    list($src_w, $src_h) = getimagesize($filename);
+    if ($src_h > $src_w) { // La foto es vertical
+        $tmp = $max_w;
+        $max_w = $max_h;
+        $max_h = $tmp;
     }
 
-
-    // http://php.net/manual/en/function.imagecopyresampled.php
-    function resize_image($filename, $max_w, $max_h, $to_file=null) {
-        list($src_w, $src_h) = getimagesize($filename);
-        $src_ratio = $src_w/$src_h;
-        if ($max_w/$max_h > $src_ratio) {
-            $max_h = $max_h*$src_ratio;
-        } else {
-           $max_h = $max_w/$src_ratio;
-        }
-        $img_p = imagecreatetruecolor($max_w, $max_h);
-        $img = imagecreatefromjpeg($filename);
-        imagecopyresampled($img_p, $img, 0, 0, 0, 0, $max_w, $max_h, $src_w,
-                           $src_h);
-        if ($to_file === null) {
-            ob_start();
-            imagejpeg($img_p, null, 100);
-            return ob_get_clean();
-        } else {
-            imagejpeg($img_p, $to_file, 100);
-            return $to_file;
-        }
+    $src_ratio = $src_w/$src_h;
+    if ($max_w/$max_h > $src_ratio) {
+        $max_h = $max_h*$src_ratio;
+    } else {
+        $max_h = $max_w/$src_ratio;
     }
-
-
-    // sergio_ag.terra.com.br http://php.net/manual/es/reserved.variables.files.php
-    function diverse_array($vector) {
-        $result = array();
-        foreach($vector as $key1 => $value1)
-            foreach($value1 as $key2 => $value2)
-                $result[$key2][$key1] = $value2;
-        return $result;
+    $img_p = imagecreatetruecolor($max_w, $max_h);
+    $img = imagecreatefromjpeg($filename);
+    imagecopyresampled($img_p, $img, 0, 0, 0, 0, $max_w, $max_h, $src_w, $src_h);
+    if ($to_file === null) {
+        ob_start();
+        imagejpeg($img_p, null, 100);
+        return ob_get_clean();
+    } else {
+        imagejpeg($img_p, $to_file, 100);
+        return $to_file;
     }
+}
 
 
-    function create_msg($type, $data) {
-        $msg['type'] = $type;
-        $msg['data'] = $data;
-        return $msg;
+function imagenValida($archivo, &$error)
+{
+    if ($archivo['error'] == 4) {
+        $error = 'Error al subir la imagen';
+        return false;
     }
-
-
-    function create_err($data) {
-        return create_msg('error', $data);
+    if (@getimagesize($archivo['tmp_name']) === false) {
+        $error = 'El archivo no es una imagen';
+        return false;
     }
-
-
-    function create_info($data) {
-        return create_msg('info', $data);
+    if (@!is_uploaded_file($archivo['tmp_name'])) {
+        $error = 'Error en la imagen proporcionada';
+        return false;
     }
+    return true;
+}
 
-
-    function create_warn($data) {
-        return create_msg('warn', $data);
-    }
-
-
-    function valid_image($name, $filepath, $status, $check_uploaded=true) {
-        if ($status == 4)
-            return array(false, '');
-        if ($status != 0 ||
-            @getimagesize($filepath) === false ||
-            ($check_uploaded && @!is_uploaded_file($filepath))) {
-            return array(false, create_err("Error al agregar $name"));
-        }
-        return array(true, '');
-    }
-
-
+// main
 if (basename(__file__) == basename($_SERVER['PHP_SELF'])) {
     require_once('inicio_sesion.php');
 
     $cfg = require('config.php');
-    ini_set('file_uploads','On');
+    ini_set('file_uploads', 'On');
     set_time_limit(0);
-    $_SESSION['messages'] = array();
 
-    if (!array_key_exists($cfg['uploads']['varname'], $_FILES)) {
-        $_SESSION['messages'][] = create_warn('Debe subir imagenes');
+
+    if (!isset($_FILES['imagen1']) && !isset($_FILES['imagen2'])) {
+        err('Error en campos proporcionados');
         header('Location: index.php');
         exit;
     }
 
-    if (!array_key_exists('clave_cuenta', $_POST) || trim($_POST['clave_cuenta']) == '') {
-        $_SESSION['messages'][] = create_warn('Indique la clave de cuenta');
+    if (!isset($_POST['clave_cuenta']) || trim($_POST['clave_cuenta']) == '') {
+        warn('Indique la clave de cuenta');
         header('Location: index.php');
         exit;
     }
 
-    $link = make_link($cfg['db']['host'], $cfg['db']['user'],
-                      $cfg['db']['password'], $cfg['db']['database']);
-    $cuenta = sanitize_string($_POST['clave_cuenta']);
-    $id_doc = $cfg['document']['begin_with_id'];
-    $uploads = diverse_array($_FILES[$cfg['uploads']['varname']]);
+    $host = $cfg['db_corporativo']['host'];
+    $user = $cfg['db_corporativo']['user'];
+    $pass = $cfg['db_corporativo']['password'];
+    $database = $cfg['db_corporativo']['database'];
+    $linkCorporativo = createLink($host, $user, $pass, $database);
+    $cuenta = strtoupper($_POST['clave_cuenta']);
+    $result = doQuery(sqlCuenta($cuenta, $linkCorporativo), $linkCorporativo, $err);
+    if (getNumRows($result) == 0) {
+        err('La clave de cuenta no existe');
+        header('Location: index.php');
+        exit;
+    }
+    doClose($linkCorporativo);
 
-    foreach ($uploads as $f) {
-        list($valid, $error) = valid_image($f['name'], $f['tmp_name'], $f['error']);
-        if (!$valid) {
-            $_SESSION['messages'][] = $error;
-            continue;
+    $host = $cfg['db_expediente']['host'];
+    $user = $cfg['db_expediente']['user'];
+    $pass = $cfg['db_expediente']['password'];
+    $database = $cfg['db_expediente']['database'];
+    $linkExpediente = createLink($host, $user, $pass, $database);
+
+    $maxWidth = $cfg['resize']['max_width'];
+    $maxHeight = $cfg['resize']['max_height'];
+
+    $imagen1 = $_FILES['imagen1'];
+    if ($imagen1['tmp_name'] != '') {
+        if (!imagenValida($imagen1, $err)) {
+            err($err);
+            header('Location: index.php');
+            exit;
+        } else {
+            $datosBin = resizeImage($imagen1['tmp_name'], $maxWidth, $maxHeight);
+            if (guardarImagen($cuenta, $_SESSION['clave_usuario'], 16, base64_encode($datosBin), $linkExpediente, $err)) {
+                info('Se agrego '.$imagen1['name']);
+            } else {
+                err('Error al agregar '.$imagen1['name'].' : '.$err);
+            }
         }
-        $data = resize_image($f['tmp_name'], $cfg['resize']['max_width'],
-                             $cfg['resize']['max_height']);
-        if (set_data($cuenta, $id_doc, base64_encode($data), $link))
-            $_SESSION['messages'][] = create_info('Se agrego '.$f['name']);
-        else
-            $_SESSION['messages'][] = create_error('Error al agregar '.$f['name']);
-        $id_doc++;
     }
 
-    make_close($link);
+    $imagen2 = $_FILES['imagen2'];
+    if ($imagen2['tmp_name'] != '') {
+        if (!imagenValida($imagen2, $err)) {
+            err($err);
+            header('Location: index.php');
+            exit;
+        } else {
+            $datosBin = resizeImage($imagen2['tmp_name'], $maxWidth, $maxHeight);
+            if (guardarImagen($cuenta, $_SESSION['clave_usuario'], 17, base64_encode($datosBin), $linkExpediente, $err)) {
+                info('Se agrego '.$imagen2['name']);
+            } else {
+                err('Error al agregar '.$imagen2['name'].' : '.$err);
+            }
+        }
+    }
+
+    doClose($linkExpediente);
     header('Location: index.php');
 }
